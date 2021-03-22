@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	cfg, err := ini.Load("my.ini")
+	cfg, err := ini.Load("config.ini")
 
 	if err != nil {
 		fmt.Printf("cant find config file my.ini: %s", err)
@@ -21,7 +21,7 @@ func main() {
 	logger := util.InitLogger().Sugar()
 	defer logger.Sync()
 
-	db := util.InitDatabase(cfg, true, true)
+	db, _ := util.InitDatabase(cfg, true, true)
 
 	// setting the environment variables
 	util.AppEnv.Config = cfg
@@ -39,7 +39,9 @@ func main() {
 
 	controller.InitRouter(environment, "/api")
 
-	port := util.Getkey("server", "http_port")
-	echo.Logger.Fatal(echo.Start(port))
+	port := util.Getkey("server", "HTTPort")
+
+	// util.AppEnv.Log.Debug("port", port)
+	echo.Logger.Fatal(echo.Start(fmt.Sprintf(":%s", port)))
 
 }

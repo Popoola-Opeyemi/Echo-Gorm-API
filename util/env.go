@@ -20,10 +20,10 @@ type Environment struct {
 	Echo   *echo.Echo
 }
 
-var AppEnv SharedEnvironment
+var AppEnv *SharedEnvironment
 
 func init() {
 	if AppEnv == nil {
-		AppEnv = SharedEnvironment{}
+		AppEnv = new(SharedEnvironment)
 	}
 }

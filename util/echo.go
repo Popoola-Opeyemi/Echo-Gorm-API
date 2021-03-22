@@ -30,7 +30,7 @@ func InitEcho() *echo.Echo {
 
 	e.Use(middleware.Recover())
 
-	e.Use(session.Middleware(sessions.NewFilesystemStore("./tmp", []byte("!yours_truly_secrets_incantations_7070_7070_7070!"))))
+	e.Use(session.Middleware(sessions.NewFilesystemStore("./tmp", []byte("ilovego!angtodm00n!"))))
 
 	e.Validator = &CustomValidator{
 		Validator: validator.New(),
