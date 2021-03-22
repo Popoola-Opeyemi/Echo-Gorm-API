@@ -1,9 +1,23 @@
 package controller
 
-// type Environment struct {
-// 	Echo *ech
-// }
+import "popstar/boilerplate/util"
 
 type Handler interface {
-	Start()
+	Start(util.Environment, string) error
+}
+
+func InitRouter(env util.Environment, prefix string) {
+
+	routesHandlers := []Handler{
+		&Auth{},
+	}
+
+	for _, routes := range routesHandlers {
+
+		if err := routes.Start(env, prefix); err != nil {
+			env.Log.Debug("router error", err)
+		}
+	}
+
+	env.Log.Debug("routes initialized")
 }

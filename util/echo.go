@@ -1,8 +1,6 @@
 package util
 
 import (
-	"fmt"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -13,7 +11,6 @@ import (
 func InitEcho() *echo.Echo {
 	e := echo.New()
 
-	port := Getkey("server", "http_port")
 	origins := LoadList("server", "origins")
 
 	e.Use(middleware.Logger())
@@ -38,12 +35,6 @@ func InitEcho() *echo.Echo {
 	e.Validator = &CustomValidator{
 		Validator: validator.New(),
 	}
-
-	controller.DefineRoutes(e, db, logger, "/api", cfg)
-	logger.Debug("routes defined")
-
-	port := fmt.Sprintf(":%s", cfg.Section("").Key("http_port").String())
-	e.Logger.Fatal(e.Start(port))
 
 	return e
 }

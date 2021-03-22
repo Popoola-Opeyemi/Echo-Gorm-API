@@ -4,19 +4,32 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"go.uber.org/zap"
+	"gopkg.in/ini.v1"
 )
 
-func InitDatabase(dbc DBConfig, logmode, singularTable bool, log *zap.SugaredLogger) *gorm.DB {
+type DBConfig struct {
+	Host     string
+	Username string
+	Password string
+	DBName   string
+}
 
-	dbConfig := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbc.Host, dbc.Username, dbc.DBName, dbc.Password)
+func InitDatabase(cfg *ini.File, logmode, singularTable bool) *gorm.DB {
+
+	dbCfg := cfg.Section("db").KeysHash()
+
+	dbConfig := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s",
+		dbCfg["user"],
+		dbCfg["dbname"],
+		dbCfg["password"])
+
 	db, err := gorm.Open("postgres", dbConfig)
 
 	db.LogMode(logmode)
 	db.SingularTable(singularTable)
 
 	if err != nil {
-		log.Debug("Could not connect to the database:", err)
+		AppEnv.Log.Debug("Could not connect to the database:", err)
 	}
 
 	return db
